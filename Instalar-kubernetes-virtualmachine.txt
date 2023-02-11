@@ -6,19 +6,18 @@ kubectl
 kubelet
 docker
 Note: Instalar la última versión estable, verifica en internet
-
+$ apt install docker
 $ sudo -i
 $ echo 'deb http://apt.kubernetes.io/ kubernetes-xenial main' > /etc/apt/sources.list.d/kubernetes.list
 $ curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
 $ apt update -y
 $ apt-get install -y kubeadm kubectl kubelet
 $ apt-mark hold kubeadm kubelet kubectl
-$ apt-get install docker-ce docker-ce-cli containerd.io containerd docker-buildx-plugin docker-compose-plugin
-$ systemctl enable docker && systemctl start docker
+$ kubeadm version
 
 Step 2: Instalación
 
-Es importante que desactivemos la swap de las 3 maquinas virtuales:
+Es importante que desactivemos la swap
 
 sudo swapoff -a
 sudo sed -i '/ swap / s/^/#/' /etc/fstab
@@ -27,9 +26,6 @@ Ahora deberíamos tener las tres máquinas listas para instalar Kubernetes.
 
 
 Y despues ejectuar las siguientes instrucciones:
-
- sudo systemctl daemon-reloadsudo systemctl restart dockersudo systemctl restart kubelet
-En el nodo master, se debe ejecutar:
 
 $ kubeadm init --pod-network-cidr 192.168.0.0/16
 Nos va a devolver este comando al ser ejecutado en los nodos workers al conectarse al cluster
@@ -47,11 +43,22 @@ Paso 4: Instalación de la red local
 
 Al final instalamos la red interna de Kubernetes para los pods. Hay varias opciones. Usaremos «Calico» (https://docs.projectcalico.org)
 
-$ kubectl create -f https://docs.projectcalico.org/v3.9/manifests/calico.yaml
+
+Instalar cube-flannel:
+
+$ sudo kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+
+
 # kubectl get nodes
 NAMESTATUSROLESAGEVERSION
 v-1-17-masterReadymaster19mv1.17.2
 v-1-17-worker-1Readyworker17mv1.17.2
 v-1-17-worker-2Readyworker17mv1.17.2
+
+Opcional:
+
+Instalar calico
+$ kubectl create -f https://docs.projectcalico.org/v3.9/manifests/calico.yaml
+
 ¿Puedo migrar mi plataforma a Kubernetes?
 Uno de los mayores obstáculos para una aplicación que se ejecuta en Kubernetes es la migración. La mayoría de los usuarios piensan que su aplicación no es adecuada para ejecutarse en Kubernetes porque no es una arquitectura de microservicios. Y aunque una aplicación monolítica no se puede convertir en microservicios sin modificar el código, es posible migrarla a Kubernetes.
