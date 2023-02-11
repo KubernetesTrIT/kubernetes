@@ -11,14 +11,18 @@ $ sudo -i
 $ echo 'deb http://apt.kubernetes.io/ kubernetes-xenial main' > /etc/apt/sources.list.d/kubernetes.list
 $ curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
 $ apt update -y
-$ apt-get install -y kubeadm=1.17.2-00 kubectl=1.17.2-00 kubelet=1.17.2-00
-$ curl -L get.docker.com | sh
+$ apt-get install -y kubeadm kubectl kubelet
+$ apt-mark hold kubeadm kubelet kubectl
+$ apt install docker.io
+$ systemctl enable docker && systemctl start docker
+
 Step 2: Instalación
 
 Es importante que desactivemos la swap de las 3 maquinas virtuales:
 
 sudo swapoff -a
 sudo sed -i '/ swap / s/^/#/' /etc/fstab
+sudo hostnamectl set-hostname master-node
 Ahora deberíamos tener las tres máquinas listas para instalar Kubernetes.
 
 Antes de esto debemos de realizar la siguiente configuración en cada maquina para no tener ningun problema.
