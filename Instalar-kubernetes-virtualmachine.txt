@@ -10,6 +10,7 @@ Note: Instalar la última versión estable, verifica en internet
 $ sudo -i
 $ echo 'deb http://apt.kubernetes.io/ kubernetes-xenial main' > /etc/apt/sources.list.d/kubernetes.list
 $ curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+$ apt update -y
 $ apt-get install -y kubeadm=1.17.2-00 kubectl=1.17.2-00 kubelet=1.17.2-00
 $ curl -L get.docker.com | sh
 Step 2: Instalación
